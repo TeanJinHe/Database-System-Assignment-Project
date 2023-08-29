@@ -1,0 +1,257 @@
+create database transportbooking;
+use transportbooking;
+ 
+create table payment
+(
+paymentID varchar(3) not null primary key,
+payment_transactiondate date,
+payment_totalprice decimal(5,2),
+payment_unit int,
+payment_description varchar(50),
+payment_method varchar(50)
+);
+ 
+insert into payment values
+('P01', '2022-12-20','20.00', '1', 'Payment by cash', 'cash'),
+('P02', '2022-12-25','10.00', '1', 'Payment by cash', 'cash'),
+('P03', '2022-12-21','20.00', '2', 'Payment by online banking', 'online banking'),
+('P04', '2022-12-26','20.00', '1', 'Payment by online banking', 'online banking'),
+('P05', '2022-12-18','20.00', '1', 'Payment by credit/debit', 'credit/debit'),
+('P06', '2022-12-18','15.00', '1', 'Payment by credit/debit', 'credit/debit'),
+('P07', '2022-12-19','45.00', '3', 'Payment by credit/debit', 'credit/debit'),
+('P08', '2022-12-22','25.00', '1', 'Payment by TnG e-wallet', 'TnG e-wallet'),
+('P09', '2022-12-23','25.00', '1', 'Payment by TnG e-wallet', 'TnG e-wallet'),
+('P10', '2022-12-24','25.00', '1', 'Payment by TnG e-wallet', 'TnG e-wallet');
+ 
+create table user
+(
+userID varchar(3) not null primary key,
+user_name varchar(50),
+user_contactnumber varchar(20),
+user_address varchar(50),
+user_email varchar(50),
+paymentID varchar(3), foreign key (paymentID) references payment(paymentID)
+);
+ 
+insert into user values                                                                
+('U01', 'Siti Sarah', '0112333232', 'Lot 114, Kampung Peramu Jaya, Pekan', 'sarah@gmail.com', 'P01'),
+('U02', 'Ahmad Rizal', '0192332265', '37, Indera Mahkota Jaya, Kuantan', 'rizal@gmail.com', 'P02'),
+('U03', 'Ong Tai Chee', '0114214576','31, Peramu Permai, Pekan', 'taichee@hotmail.com', 'P03'),
+('U04', 'Sridevi Chopra', '0153442785', 'Lot 3323, Bukit Setongkol, Kuantan', 'sridevi@gmail.com','P04'),
+('U05', 'Kamal Azri', '0131433241', '44, Taman Balok Jaya, Kuantan', 'kamal@gmail.com', 'P05'),
+('U06', 'Cathy Ong', '0122115321', 'Lot 1141, Bukit Istana, Kuantan', 'cathy@gmail.com', 'P06'),
+('U07', 'Gurmit Singh', '0114215436', '213, Taman Permai Jaya, Kuantan','gurmit@hotmail.com', 'P07'),
+('U08', 'Lim Pei Ling', '0132124322', '32, Tanjung Lumpur Indah, Kuantan', 'peiling@gmail.com', 'P08'),
+('U09', 'Anna Cameron', '0121170985', 'Lot 912, Taman Kuala Pahang, Pekan','anna@gmail.com', 'P09'),
+('U10', 'Sally Ong', '0112252455', 'Lot 123, Taman Permai Jaya, Kuantan',  'sally@gmail.com', 'P10');
+ 
+create table bookingticket
+(
+bookingID varchar(3) not null primary key,
+booking_date date,
+booking_type varchar(20),
+booking_destination varchar(50),
+booking_description varchar(50),
+userID varchar(3), foreign key (userID) references user(userID),
+paymentID varchar(3), foreign key (paymentID) references payment(paymentID)
+);
+ 
+insert into bookingticket values
+('B01', '2023-01-11', 'Go', 'Johor Bahru', null,'U01','P01'),
+('B02', '2023-01-12', 'Go', 'Seremban', null,'U02','P02'),
+('B03', '2023-01-13', 'Go', 'Bandaraya Melaka', null,'U03','P03'),
+('B04', '2023-01-13', 'Go', 'Bandaraya Melaka', null,'U03','P03'),
+('B05', '2023-01-14', 'Go', 'Shah Alam',null,'U04','P04'),
+('B06', '2023-01-15', 'Go', 'Kuantan', null,'U05','P05'),
+('B07', '2023-01-16', 'Back', 'Ipoh', null,'U06','P06'),
+('B08', '2023-01-17', 'Back', 'Alor Setar', null,'U07','P07'),
+('B09', '2023-01-17', 'Back', 'Alor Setar', null,'U07','P07'),
+('B10', '2023-01-17', 'Back', 'Alor Setar', null,'U07','P07'),
+('B11', '2023-01-18', 'Back', 'George Town', null, 'U08','P08'),
+('B12', '2023-01-19', 'Back', 'Kota Bharu', null, 'U09','P09'),
+('B13', '2023-01-20', 'Back', 'Kangar', null,'U10','P10');
+ 
+create table service
+(
+serviceID varchar(3) not null primary key,
+service_type varchar(50),
+service_contactnumber varchar(20),
+service_email varchar(50),
+service_description varchar(50),
+bookingID varchar(3), foreign key (bookingID) references bookingticket(bookingID),
+userID varchar(3), foreign key (userID) references user(userID)
+); 
+ 
+insert into service values
+('S01','booking error','0112252455', 'sally@gmail.com',null,'B01','U01'),
+('S02','booking error','0112252455', 'sally@gmail.com',null,'B10','U10'),
+('S03', 'transaction error', '0148872455','aminah@gmail.com', null,'B01','U01'),
+('S04', 'transaction error', '0148872455','aminah@gmail.com', null,'B10','U10'),
+('S05', 'change date','0125049889', 'sarra@hotmail.com',null,'B02','U02'),
+('S06','change destination ', '0113322055', 'lisa@gmail.com',null,'B03','U03'),
+('S07', 'change seat','0152252020', 'adamhakim@hotmail.com',null,'B06','U06'),
+('S08', 'change company', '0123308877', 'devi@yahoo.com',null,'B07','U07'),
+('S09', 'change staff', '0142275565', 'farah@gmail.com',null,'B08','U08'),
+('S10', 'change transport', '0134449776', 'ravi@hotmail.com',null,'B09','U09'),
+('S11', 'change user name', '0123192365', 'aiman@gmail.com',null,'B05','U05'),
+('S12', 'change user email', '0155592201', 'brianlee@yahoo.com',null,'B05','U05');
+   
+ create table company
+(
+companyID varchar(3) not null primary key,
+company_name varchar(50),
+company_contactnumber varchar(20),
+company_description varchar(50)
+);
+ 
+insert into company values
+ ('C01', 'BusA Company', '0123456789', 'provide 1 bus'),
+ ('C02', 'BusB Company', '0134567891', 'provide 1 bus'),
+ ('C03', 'BusC Company', '0145678912', 'provide 1 bus'),
+ ('C04', 'BusD Company', '0156789123', 'provide 1 bus'),
+ ('C05', 'VanA Company', '0167891234', 'provide 1 van'),
+ ('C06', 'VanB Company', '0178912345', 'provide 1 van'),
+ ('C07', 'VanC Company', '0189123456', 'provide 1 van'),
+ ('C08', 'VanD Company', '0191234567', 'provide 1 van'),
+ ('C09', 'TrainA Company', '0101234567', 'provide 1 train'),
+ ('C10', 'TrainB Company', '0123456789', 'provide 1 train');
+ 
+create table transport
+(
+transportID varchar(3) not null primary key,
+transport_num varchar(7),
+transport_type varchar(10),
+transport_location varchar(50),
+transport_description varchar(50),
+companyID varchar(3), foreign key (companyID) references company(companyID)
+);
+ 
+insert into transport values
+ ('T01', 'JJH8888', 'Bus', 'Johor Bahru', 'Bus to Johor Bahru', 'C01'),
+ ('T02', 'NJH8888', 'Bus', 'Seremban', 'Bus to Seremban', 'C02'),
+ ('T03', 'MJH8888', 'Bus', 'Bandaraya Melaka', 'Bus to Bandaraya Melaka', 'C03'),
+ ('T04', 'BJH8888', 'Bus', 'Shah Alam', 'Bus to Shah Alam', 'C04'),
+ ('T05', 'CJH8888', 'Van', 'Kuantan', 'Van to Kuantan', 'C05'),
+ ('T06', 'AJH8888', 'Van', 'Ipoh', 'Van to Ipoh', 'C06'),
+ ('T07', 'KJH8888', 'Van', 'Alor Setar', 'Van to Alor Setar', 'C07'),
+ ('T08', 'PJH8888', 'Van', 'George Town', 'Van to George Town', 'C08'),
+ ('T09', 'DJH8888', 'Train', 'Kota Bharu', 'Train to Kota Bharu', 'C09'),
+ ('T10', 'RJH8888', 'Train', 'Kangar', 'Train to Kangar', 'C10');
+ 
+ create table staff
+(
+staffID varchar(3) not null primary key,
+staff_name varchar(50),
+staff_contactnumber varchar(20),
+staff_email varchar(50),
+transportID varchar(3), foreign key (transportID) references transport(transportID),
+companyID varchar(3), foreign key (companyID) references company(companyID)
+);
+ 
+insert into staff values
+('F01', 'Ali', '0112333232', 'ali@gmail.com', 'T01','C01'),
+('F02', 'Abu', '0192332265', 'abu@gmail.com', 'T02','C02'),
+('F03', 'Muthu', '0114214576', 'muthu@hotmail.com', 'T03','C03'),
+('F04', 'Kabou', '0153442785', 'kabou@gmail.com', 'T04','C04'),
+('F05', 'Keely', '0131433241', 'keely@gmail.com', 'T05','C05'),
+('F06', 'Stacy', '0122115321', 'stacy@gmail.com', 'T06','C06'),
+('F07', 'Eliane', '0114215436', 'eliane@hotmail.com',null,null),
+('F08', 'Joe', '0132124322', 'joe@gmail.com', 'T08','C08'),
+('F09', 'Joel', '0121170985', 'joel@gmail.com','T09','C09'),
+('F10', 'Zoey', '0112333232', 'zoey@gmail.com', 'T10','C10');
+
+create table seat
+(
+seatID varchar(3) not null primary key,
+seat_position varchar(20),
+seat_num varchar(5),
+seat_type varchar(20),
+seat_price decimal(5,2),
+seat_description varchar(50),
+bookingID varchar(3), foreign key (bookingID) references bookingticket(bookingID),
+transportID varchar(3), foreign key (transportID) references transport(transportID)
+);
+ 
+insert into seat values
+('E01', 'Right', 'BA001', 'Standard', '20.00', 'Window seat and no snack','B01', 'T01'),
+('E02', 'Middle', 'BB003', 'Standard', '10.00', 'no snack','B02', 'T02'),
+('E03', 'Middle', 'BC003', 'Standard', '10.00', 'no snack','B03', 'T03'),
+('E04', 'Middle Left', 'BC004', 'Standard', '10.00', 'no snack','B04', 'T03'),
+('E05', 'Left', 'VB005', 'Standard', '20.00', 'Window seat and no snack','B05', 'T06'),
+('E06', 'Left', 'VC005', 'Standard', '20.00', 'Window seat and no snack','B06', 'T07'),
+('E07', 'Middle Right', 'VD002', 'VIP', '15.00', 'provide snack','B07', 'T08'),
+('E08', 'Middle Right', 'VC002', 'VIP', '15.00', 'provide snack','B08', 'T07'),
+('E09', 'Middle ', 'VC003', 'VIP', '15.00', 'provide snack','B09', 'T07'),
+('E10', 'Middle Left', 'VC004', 'VIP', '15.00', ' provide snack','B10', 'T07'),
+('E11', 'Left', 'VD005', 'VIP', '25.00', 'Window seat and provide snack','B11', 'T08'),
+('E12', 'Left', 'TA005', 'VIP', '25.00', 'Window seat and provide snack','B12', 'T09'),
+('E13', 'Left', 'TB005', 'VIP', '25.00', 'Window seat and provide snack','B13', 'T10');
+
+create table orders
+(
+seatID varchar(3), foreign key (seatID) references seat(seatID),
+transportID varchar(3),  foreign key (transportID) references transport(transportID),
+count_journey int
+); 
+
+insert into orders values
+('E01','T01','10'),
+('E02','T02','12'),
+('E03','T03','16'),
+('E04','T03','16'),
+('E05','T06','18'),
+('E06','T07','17'),
+('E07','T08','15'),
+('E08','T07','11'),
+('E09','T07','11'),
+('E10','T07','11'),
+('E11','T08','13'),
+('E12','T09','14'),
+('E13','T10','20');
+
+create table class
+(
+bookingID varchar(3), foreign key (bookingID) references bookingticket(bookingID),
+companyID varchar(3),  foreign key (companyID) references company(companyID),
+operation_hour int
+); 
+
+insert into class values
+('B01','C01','22'),
+('B02','C02','18'),
+('B03','C03','20'),
+('B04','C03','20'),
+('B05','C04','18'),
+('B06','C05','17'),
+('B07','C06','12'),
+('B08','C07','10'),
+('B09','C07','10'),
+('B10','C07','10'),
+('B11','C08','11'),
+('B12','C09','15'),
+('B13','C10','15');
+
+create table details
+(
+bookingID varchar(3), foreign key (bookingID) references bookingticket(bookingID),
+staffID varchar(3),  foreign key (staffID) references staff(staffID),
+working_time varchar(20)
+); 
+
+insert into details values
+('B01','F01','9:00a.m.-5:00p.m.'),
+('B02','F02','12:00a.m.-4:00a.m.'),
+('B03','F03','4:00p.m.-9:00p.m.'),
+('B04','F03','4:00p.m.-9:00p.m.'),
+('B05','F04','12:00a.m.-4:00a.m.'),
+('B06','F05','1:00p.m.-5:00p.m.'),
+('B07','F06','12:00a.m.-5:00p.m.'),
+('B08','F07','8:00a.m.-6:00p.m.'),
+('B09','F07','8:00a.m.-6:00p.m.'),
+('B10','F07','8:00a.m.-6:00p.m.'),
+('B11','F08','5:00p.m.-9:00p.m.'),
+('B12','F09','12:00p.m.-5:00p.m.'),
+('B13','F10','12:00p.m.-5:00p.m.');
+
+commit;
+
